@@ -24,8 +24,8 @@
           <div>
             {{ form.senha.label }}
             {{ form.senha() }}
-            {% if form.email.errors %}
-              {% for erro in form.email.errors %}
+            {% if form.senha.errors %}
+              {% for erro in form.senha.errors %}
                 <div>
                   <span style="color: red;">{{ erro }}</span>
                 </div>
@@ -35,8 +35,8 @@
           <div>
             {{ form.confirmar_senha.label }}
             {{ form.confirmar_senha() }}
-            {% if form.email.errors %}
-              {% for erro in form.email.errors %}
+            {% if form.confirmar_senha.errors %}
+              {% for erro in form.confirmar_senha.errors %}
                 <div>
                   <span style="color: red;">{{ erro }}</span>
                 </div>
