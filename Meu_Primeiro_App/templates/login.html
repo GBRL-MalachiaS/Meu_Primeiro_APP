@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{url_for('static',filename='css/login.css')}}">
+    <title>Login</title>
+  </head>
+  <body>
+    <main>
+      <section class="login">
+        <form method="POST" action="">
+          {# form.hidden_tag() - é OBRIGATÓRIO: #}
+          {# Pois renderiza o token CSRF e outros campos ocultos #}
+          {{ form.hidden_tag() }}
+          {# Cria o rótulo de texto, já conectado ao campo de input para melhor acessibilidade. #}
+          <div class="label">
+            {{ form.email.label }}
+            {# Cria a caixa de preenchimento em si, com todos os atributos necessários. #}
+            {# Cria a caixa de preenchimento e adiciona atributos extras (como class, size, placeholder) ao HTML. #}
+            {{ form.email(size=30) }}
+            {% if form.email.errors %}
+              {% for erro in form.email.errors %}
+                <span style="color: red;">{{ erro }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <br />
+          <div>
+            {{ form.senha.label }}<br />
+            {{ form.senha(size=30) }} {% if form.senha.errors %}
+              {% for erro in form.senha.errors %}
+                <span style="color: red;">{{ erro }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <br />
+          <div>{{ form.enviar() }}</div>
+        </form>
+        {% with messages=get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </section>
+    </main>
+  </body>
+</html>

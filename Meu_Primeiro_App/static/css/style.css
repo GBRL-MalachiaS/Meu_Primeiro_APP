@@ -1,0 +1,26 @@
+/* Arquivo: meu_primeiro_app/static/css/style.css */
+
+body {
+    background-color: #f0f8ff; /* Um azul bem clarinho (Alice Blue) */
+    font-family: sans-serif;
+    text-align: center;
+    margin-top: 50px;
+}
+
+h1 {
+    color: #4682b4; /* Um azul mais forte (Steel Blue) */
+}
+
+ul {
+    list-style-type: none; /* Remove as bolinhas da lista */
+    padding: 0;
+}
+
+li {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 5px auto; /* 'auto' na horizontal centraliza o bloco */
+    width: 200px;
+    border-radius: 5px;
+}

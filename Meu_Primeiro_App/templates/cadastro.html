@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro</title>
+  </head>
+  <body>
+    <main>
+      <section class="cadastro-login">
+        <form method="POST" action="">
+          {{ form.hidden_tag() }}
+          <div>
+            {{ form.email.label }}
+            {{ form.email() }}
+            {% if form.email.errors %}
+              {% for erro in form.email.errors %}
+                <div>
+                  <span style="color: red;">{{ erro }}</span>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <div>
+            {{ form.senha.label }}
+            {{ form.senha() }}
+            {% if form.email.errors %}
+              {% for erro in form.email.errors %}
+                <div>
+                  <span style="color: red;">{{ erro }}</span>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <div>
+            {{ form.confirmar_senha.label }}
+            {{ form.confirmar_senha() }}
+            {% if form.email.errors %}
+              {% for erro in form.email.errors %}
+                <div>
+                  <span style="color: red;">{{ erro }}</span>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <div>{{ form.enviar()}}</div>
+        </form>
+         {% with messages=get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </section>
+    </main>
+  </body>
+</html>

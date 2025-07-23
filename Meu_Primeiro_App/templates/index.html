@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <title>Minha primeira Pagina Dinâmica</title>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>{{ titulo }}</h1>
+        <p>{{ saudacao }}</p>
+
+        {% if mostrar_lista %}
+          <h2>Minha lista de habilidades:</h2>
+          <ul>
+            {% for habilidade in habilidades %}
+              <li>{{ habilidade }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>A lista de habilidade está oculta.</p>
+        {% endif %}
+      </section>
+      <section>
+        {% with messages=get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </section>
+    </main>
+  </body>
+</html>
