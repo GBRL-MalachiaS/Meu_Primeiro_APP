@@ -3,19 +3,53 @@ from flask_wtf import FlaskForm
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_fresh, current_user, login_user, logout_user, login_required
+from flask_migrate import Migrate
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, ValidationError, EqualTo
 from datetime import datetime
 
 # Inicializa a aplicação Flask, chamando a classe Flask
-app = Flask(__name__)
 
+app = Flask(__name__)
 
 # Aqui definimos nossa configuração !
 app.config['SECRET_KEY'] = 'uma-chave-secreta-muito-dificil-de-adivinhar'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 # Aqui definimos nossos formularios
+
+db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+migrate = Migrate(app, db)
+
+
+login_manager = LoginManager(app)
+# Informa ao Flask-Login qual é a rota de login
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'info'  # Categoria da mensagem de flash
+
+
+class Usuario(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    senha = db.Column(db.String(60), nullable=False)
+    posts = db.relationship('Post', backref='autor', lazy=True)
+
+    def __repr__(self):
+        return f'Usuario({self.email})'
+
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(100), unique=True, nullable=False)
+    conteudo = db.Column(db.Text, nullable=False)
+    data_postagem = db.Column(
+        db.DateTime, nullable=False, default=datetime.now().strftime('%d/%m/%Y'))
+    hora_postagem = db.Column(
+        db.DateTime, nullable=False, default=datetime.now().strftime('%H:%M:%S'))
+    id_usuario = db.Column(db.Integer, db.ForeignKey(
+        'usuario.id'), nullable=False)
+
 
 # Formulario de login
 
@@ -59,35 +93,7 @@ class FormRegistro(FlaskForm):
                 'Este e-mail já está em uso. Por favor, escolha outro')
 
 
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
-
 # Aqui criamos nosso models(modelo de banco de dados)
-
-
-class Usuario(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    senha = db.Column(db.String(60), nullable=False)
-    posts = db.relationship('Post', backref='autor', lazy=True)
-
-    def __repr__(self):
-        return f'Usuario({self.email})'
-    
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(100), unique=True, nullable=False)
-    conteudo = db.Column(db.Text, nullabel=False)
-    data_postagem = db.Column(db.Datime, nullable=False, default=datetime.now().strftime('%d/%m/%Y'))
-    hora_postagem = db.Column(db.Datime, nullable=False, default=datetime.now().strftime('%H:%M:%S'))
-    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
-    
-
-
-login_manager = LoginManager(app)
-# Informa ao Flask-Login qual é a rota de login
-login_manager.login_view = 'login'
-login_manager.login_message_category = 'info'  # Categoria da mensagem de flash
 
 
 @login_manager.user_loader
@@ -152,10 +158,12 @@ def login():
 def conta():
     return render_template('conta.html')
 
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
